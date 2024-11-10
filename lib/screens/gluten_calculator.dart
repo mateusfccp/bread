@@ -1,4 +1,5 @@
 import 'package:bread/domain/repositories/gluten_computation_repository.dart';
+import 'package:bread/domain/use_cases/compute_gluten_addition.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:number_text_input_formatter/number_text_input_formatter.dart';
@@ -20,7 +21,6 @@ final class _GlutenCalculatorScreenState extends State<GlutenCalculatorScreen> {
   late final _flourProteinPercentageTextController = TextEditingController(text: widget.glutenComputationRepository.flourProteinPercentage.toString());
   late final _targetProteinPercentageTextController = TextEditingController(text: widget.glutenComputationRepository.targetProteinPercentage.toString());
   late final _glutenProteinPercentageTextController = TextEditingController(text: widget.glutenComputationRepository.glutenProteinPercentage.toString());
-  late bool _subtractGlutenFromTotalFlour = widget.glutenComputationRepository.subtractGlutenFromTotalFlour;
 
   Decimal? _flourQuantity;
   Decimal? _computedResult;
@@ -101,20 +101,6 @@ final class _GlutenCalculatorScreenState extends State<GlutenCalculatorScreen> {
                 keyboardType: _keyboardType,
               ),
               const SizedBox(height: 8.0),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    value: _subtractGlutenFromTotalFlour,
-                    onChanged: _setSubtractGlutenFromTotalFlour,
-                  ),
-                  const SizedBox(width: 4.0),
-                  Expanded(
-                    child: Text('Subtrair glúten da quantidade total de farinha'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
               FilledButton(
                 onPressed: _computeValue,
                 child: Text('Computar'),
@@ -127,13 +113,12 @@ final class _GlutenCalculatorScreenState extends State<GlutenCalculatorScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      if (_subtractGlutenFromTotalFlour)
                         Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(text: 'Quantidade de farinha: '),
                               TextSpan(
-                                text: '${_flourQuantity! - result}g',
+                                text: '${_flourQuantity!}g',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -142,12 +127,11 @@ final class _GlutenCalculatorScreenState extends State<GlutenCalculatorScreen> {
                       Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: 'Adicionar '),
+                            TextSpan(text: 'Quantidade de glúten: '),
                             TextSpan(
                               text: '${result}g',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            TextSpan(text: ' de gluten à farinha.')
                           ],
                         ),
                       ),
@@ -195,25 +179,27 @@ final class _GlutenCalculatorScreenState extends State<GlutenCalculatorScreen> {
     }
   }
 
-  void _setSubtractGlutenFromTotalFlour(bool? value) {
-    value!;
-    setState(() {
-      widget.glutenComputationRepository.subtractGlutenFromTotalFlour = value;
-      _subtractGlutenFromTotalFlour = value;
-    });
-  }
-
   void _computeValue() {
     final hundred = Decimal.fromInt(100);
-    final flourQuantity = _flourQuantity = Decimal.parse(_flourQuantityTextController.text);
+    final totalFlour = Decimal.parse(_flourQuantityTextController.text);
     final flourProteinPercentage = Decimal.parse(_flourProteinPercentageTextController.text) / hundred;
-    final expectedProteinPercentage = Decimal.parse(_targetProteinPercentageTextController.text) / hundred;
+    final targetProteinPercentage = Decimal.parse(_targetProteinPercentageTextController.text) / hundred;
     final glutenProteinPercentage = Decimal.parse(_glutenProteinPercentageTextController.text) / hundred;
 
-    final result = flourQuantity * (expectedProteinPercentage - flourProteinPercentage).toDecimal() / glutenProteinPercentage.toDecimal();
+    final algorithm = PriceselyComputeGlutenAddition();
 
     setState(() {
-      _computedResult = result.toDecimal(scaleOnInfinitePrecision: 2);
+      final Decimal flourQuantity, glutenQuantity;
+      
+      (:flourQuantity, :glutenQuantity) = algorithm.compute(
+        totalFlour: totalFlour,
+        flourProteinPercentage: flourProteinPercentage.toDecimal(scaleOnInfinitePrecision: 2),
+        glutenProteinPercentage: glutenProteinPercentage.toDecimal(scaleOnInfinitePrecision: 2),
+        targetProteinPercentage: targetProteinPercentage.toDecimal(scaleOnInfinitePrecision: 2),
+      );
+      
+      _flourQuantity = flourQuantity;
+      _computedResult = glutenQuantity;
     });
   }
 }

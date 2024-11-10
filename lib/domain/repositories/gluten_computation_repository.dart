@@ -13,9 +13,6 @@ abstract interface class GlutenComputationRepository {
 
   /// The percentage of protein of the added gluten.
   abstract Decimal glutenProteinPercentage;
-
-  /// Whether the flour should be subtracted proportionally to the added gluten.
-  abstract bool subtractGlutenFromTotalFlour;
 }
 
 final class DefaultGlutenComputationRepository implements GlutenComputationRepository {
@@ -95,23 +92,5 @@ final class DefaultGlutenComputationRepository implements GlutenComputationRepos
   @override
   set glutenProteinPercentage(Decimal value) {
     sharedPreferences.setString('glutenProteinPercentage', value.toString());
-  }
-
-  @override
-  bool get subtractGlutenFromTotalFlour {
-    final subtractFlutenFromTotalFlour = sharedPreferences.getBool('subtractGlutenFromTotalFlour');
-
-    if (subtractFlutenFromTotalFlour == null) {
-      final defaultSubtractFlutenFromTotalFlour = true;
-      subtractGlutenFromTotalFlour = defaultSubtractFlutenFromTotalFlour;
-      return defaultSubtractFlutenFromTotalFlour;
-    } else {
-      return subtractFlutenFromTotalFlour;
-    }
-  }
-
-  @override
-  set subtractGlutenFromTotalFlour(bool value) {
-    sharedPreferences.setBool('subtractGlutenFromTotalFlour', value);
   }
 }
