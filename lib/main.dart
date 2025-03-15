@@ -19,16 +19,11 @@ Future<void> main() async {
     glutenComputationRepository: glutenComputationRepository,
   );
 
-  runApp(
-    App(router: router),
-  );
+  runApp(App(router: router));
 }
 
 final class App extends StatelessWidget {
-  const App({
-    super.key,
-    required this.router,
-  });
+  const App({super.key, required this.router});
 
   final RouterConfig<Object> router;
 

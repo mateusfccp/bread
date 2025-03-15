@@ -20,20 +20,19 @@ GoRouter createRouter({
         },
         routes: [
           GoRoute(
-              path: '/gluten',
-              pageBuilder: (context, state) {
-                return NoTransitionPage(
-                  child: GlutenCalculatorScreen(
-                    glutenComputationRepository: glutenComputationRepository,
-                  ),
-                );
-              }),
+            path: '/gluten',
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: GlutenCalculatorScreen(
+                  glutenComputationRepository: glutenComputationRepository,
+                ),
+              );
+            },
+          ),
           GoRoute(
             path: '/temperature',
             pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: TemperatureCalculatorScreen(),
-              );
+              return NoTransitionPage(child: TemperatureCalculatorScreen());
             },
           ),
         ],
@@ -48,10 +47,7 @@ const _routeTitle = {
 };
 
 class _NavigationScaffold extends StatelessWidget {
-  const _NavigationScaffold({
-    required this.title,
-    required this.child,
-  });
+  const _NavigationScaffold({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -59,32 +55,32 @@ class _NavigationScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+      appBar: AppBar(title: Text(title)),
       drawer: Drawer(
-        child: Builder(builder: (context) {
-          return ListView(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.breakfast_dining),
-                title: const Text('Calculadora de glúten'),
-                onTap: () {
-                  context.go('/gluten');
-                  Scaffold.of(context).closeDrawer();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.thermostat),
-                title: const Text('Calculadora de temperatura'),
-                onTap: () {
-                  context.go('/temperature');
-                  Scaffold.of(context).closeDrawer();
-                },
-              ),
-            ],
-          );
-        }),
+        child: Builder(
+          builder: (context) {
+            return ListView(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.breakfast_dining),
+                  title: const Text('Calculadora de glúten'),
+                  onTap: () {
+                    context.go('/gluten');
+                    Scaffold.of(context).closeDrawer();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.thermostat),
+                  title: const Text('Calculadora de temperatura'),
+                  onTap: () {
+                    context.go('/temperature');
+                    Scaffold.of(context).closeDrawer();
+                  },
+                ),
+              ],
+            );
+          },
+        ),
       ),
       body: child,
     );

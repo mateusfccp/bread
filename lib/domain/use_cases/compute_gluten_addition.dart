@@ -1,9 +1,7 @@
 import 'package:decimal/decimal.dart';
 
-typedef FlourAndGlutenQuantity = ({
-  Decimal flourQuantity,
-  Decimal glutenQuantity,
-});
+typedef FlourAndGlutenQuantity =
+    ({Decimal flourQuantity, Decimal glutenQuantity});
 
 abstract interface class ComputeGlutenAddition {
   FlourAndGlutenQuantity compute({
@@ -15,7 +13,8 @@ abstract interface class ComputeGlutenAddition {
 }
 
 final class PriceselyComputeGlutenAddition implements ComputeGlutenAddition {
-  factory PriceselyComputeGlutenAddition() => const PriceselyComputeGlutenAddition._();
+  factory PriceselyComputeGlutenAddition() =>
+      const PriceselyComputeGlutenAddition._();
 
   const PriceselyComputeGlutenAddition._();
 
@@ -26,18 +25,19 @@ final class PriceselyComputeGlutenAddition implements ComputeGlutenAddition {
     required Decimal glutenProteinPercentage,
     required Decimal targetProteinPercentage,
   }) {
-    final glutenQuantity = (totalFlour * (targetProteinPercentage - flourProteinPercentage) / (glutenProteinPercentage - flourProteinPercentage)).toDecimal(scaleOnInfinitePrecision: 2);
+    final glutenQuantity = (totalFlour *
+            (targetProteinPercentage - flourProteinPercentage) /
+            (glutenProteinPercentage - flourProteinPercentage))
+        .toDecimal(scaleOnInfinitePrecision: 2);
     final flourQuantity = totalFlour - glutenQuantity;
 
-    return (
-      flourQuantity: flourQuantity,
-      glutenQuantity: glutenQuantity,
-    );
+    return (flourQuantity: flourQuantity, glutenQuantity: glutenQuantity);
   }
 }
 
 final class ClassicallyComputeGlutenAddition implements ComputeGlutenAddition {
-  factory ClassicallyComputeGlutenAddition() => const ClassicallyComputeGlutenAddition._();
+  factory ClassicallyComputeGlutenAddition() =>
+      const ClassicallyComputeGlutenAddition._();
 
   const ClassicallyComputeGlutenAddition._();
 
@@ -48,11 +48,11 @@ final class ClassicallyComputeGlutenAddition implements ComputeGlutenAddition {
     required Decimal glutenProteinPercentage,
     required Decimal targetProteinPercentage,
   }) {
-    final result = (totalFlour * (targetProteinPercentage - flourProteinPercentage) / glutenProteinPercentage).toDecimal(scaleOnInfinitePrecision: 2);
+    final result = (totalFlour *
+            (targetProteinPercentage - flourProteinPercentage) /
+            glutenProteinPercentage)
+        .toDecimal(scaleOnInfinitePrecision: 2);
 
-    return (
-      flourQuantity: totalFlour - result,
-      glutenQuantity: result,
-    );
+    return (flourQuantity: totalFlour - result, glutenQuantity: result);
   }
 }

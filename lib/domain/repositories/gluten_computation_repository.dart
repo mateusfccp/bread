@@ -15,10 +15,9 @@ abstract interface class GlutenComputationRepository {
   abstract Decimal glutenProteinPercentage;
 }
 
-final class DefaultGlutenComputationRepository implements GlutenComputationRepository {
-  DefaultGlutenComputationRepository({
-    required this.sharedPreferences,
-  });
+final class DefaultGlutenComputationRepository
+    implements GlutenComputationRepository {
+  DefaultGlutenComputationRepository({required this.sharedPreferences});
 
   final SharedPreferencesWithCache sharedPreferences;
 
@@ -42,7 +41,9 @@ final class DefaultGlutenComputationRepository implements GlutenComputationRepos
 
   @override
   Decimal get flourProteinPercentage {
-    final flourProteinPercentageString = sharedPreferences.getString('flourProteinPercentage');
+    final flourProteinPercentageString = sharedPreferences.getString(
+      'flourProteinPercentage',
+    );
 
     if (flourProteinPercentageString == null) {
       final defaultFlourProteinPercentage = Decimal.fromInt(9);
@@ -60,7 +61,9 @@ final class DefaultGlutenComputationRepository implements GlutenComputationRepos
 
   @override
   Decimal get targetProteinPercentage {
-    final targetProteinPercentageString = sharedPreferences.getString('targetProteinPercentage');
+    final targetProteinPercentageString = sharedPreferences.getString(
+      'targetProteinPercentage',
+    );
 
     if (targetProteinPercentageString == null) {
       final defaultTargetProteinPercentage = Decimal.fromInt(13);
@@ -78,7 +81,9 @@ final class DefaultGlutenComputationRepository implements GlutenComputationRepos
 
   @override
   Decimal get glutenProteinPercentage {
-    final glutenProteinPercentageString = sharedPreferences.getString('glutenProteinPercentage');
+    final glutenProteinPercentageString = sharedPreferences.getString(
+      'glutenProteinPercentage',
+    );
 
     if (glutenProteinPercentageString == null) {
       final defaultGlutenProteinPercentage = Decimal.fromInt(75);

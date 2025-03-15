@@ -5,10 +5,12 @@ final class TemperatureCalculatorScreen extends StatefulWidget {
   const TemperatureCalculatorScreen({super.key});
 
   @override
-  State<TemperatureCalculatorScreen> createState() => _TemperatureCalculatorScreenState();
+  State<TemperatureCalculatorScreen> createState() =>
+      _TemperatureCalculatorScreenState();
 }
 
-final class _TemperatureCalculatorScreenState extends State<TemperatureCalculatorScreen> {
+final class _TemperatureCalculatorScreenState
+    extends State<TemperatureCalculatorScreen> {
   final _targetTemperatureTextController = TextEditingController(text: '25');
   final _airTemperatureTextController = TextEditingController();
   final _flourTemperatureTextController = TextEditingController();
@@ -74,10 +76,7 @@ final class _TemperatureCalculatorScreenState extends State<TemperatureCalculato
                 keyboardType: _keyboardType,
               ),
               const SizedBox(height: 8.0),
-              FilledButton(
-                onPressed: _computeValue,
-                child: Text('Computar'),
-              ),
+              FilledButton(onPressed: _computeValue, child: Text('Computar')),
               if (_computedResult case final result?) ...[
                 const SizedBox(height: 8.0),
                 Container(
@@ -92,12 +91,12 @@ final class _TemperatureCalculatorScreenState extends State<TemperatureCalculato
                           text: '${result}g',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        TextSpan(text: ' de gluten à farinha.')
+                        TextSpan(text: ' de gluten à farinha.'),
                       ],
                     ),
                   ),
                 ),
-              ]
+              ],
             ],
           ),
         ),
@@ -106,13 +105,18 @@ final class _TemperatureCalculatorScreenState extends State<TemperatureCalculato
   }
 
   void _computeValue() {
-    final emptyControllers = _temperatureControllers.where((controller) => controller.text.isEmpty);
+    final emptyControllers = _temperatureControllers.where(
+      (controller) => controller.text.isEmpty,
+    );
     final TextEditingController emptyController;
 
     try {
       emptyController = emptyControllers.single;
     } catch (error) {
-      final text = emptyControllers.isEmpty ? 'Você deve deixar uma das temperaturas vazias!' : 'Apenas uma das temperaturas deve estar vazia!';
+      final text =
+          emptyControllers.isEmpty
+              ? 'Você deve deixar uma das temperaturas vazias!'
+              : 'Apenas uma das temperaturas deve estar vazia!';
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -130,7 +134,9 @@ final class _TemperatureCalculatorScreenState extends State<TemperatureCalculato
         .map((text) => text.isEmpty ? 0.0 : double.parse(text))
         .reduce((current, next) => current + next);
 
-    final intendedTemperature = double.parse(_targetTemperatureTextController.text);
+    final intendedTemperature = double.parse(
+      _targetTemperatureTextController.text,
+    );
 
     final result = intendedTemperature * _temperatureControllers.length - sum;
 
@@ -140,5 +146,8 @@ final class _TemperatureCalculatorScreenState extends State<TemperatureCalculato
   }
 }
 
-const _keyboardType = TextInputType.numberWithOptions(signed: true, decimal: true);
+const _keyboardType = TextInputType.numberWithOptions(
+  signed: true,
+  decimal: true,
+);
 final _filter = NumberTextInputFormatter(decimalDigits: 2);
